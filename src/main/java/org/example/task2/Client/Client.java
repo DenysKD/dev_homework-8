@@ -1,4 +1,4 @@
-package org.example.task2;
+package org.example.task2.Client;
 
 public class Client {
     private long id;
