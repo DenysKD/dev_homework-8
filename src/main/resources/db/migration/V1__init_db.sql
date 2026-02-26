@@ -1,0 +1,38 @@
+CREATE TABLE worker(
+ID int NOT NULL PRIMARY KEY,
+NAME varchar NOT NULL CHECK(length(NAME) >= 2 AND length(NAME) <= 1000),
+BIRTHDAY DATE NOT NULL CHECK (EXTRACT(YEAR FROM birthday) > 1900),
+LEVEL varchar NOT NULL CHECK(LEVEL IN ('Trainee', 'Junior', 'Middle', 'Senior')),
+SALARY int NOT NULL CHECK(SALARY > 100 AND SALARY < 100000)
+);
+
+CREATE TABLE client(
+ID int NOT NULL PRIMARY KEY,
+NAME varchar NOT NULL CHECK(length(NAME) >= 2 AND length(NAME) <= 1000)
+);
+
+CREATE TABLE project(
+ID int NOT NULL PRIMARY KEY,
+CLIENT_ID int NOT NULL,
+START_DATE date,
+FINISH_DATE date
+);
+
+ALTER TABLE project ADD CONSTRAINT project_fk FOREIGN KEY (CLIENT_ID) REFERENCES client(ID) ON DELETE CASCADE;
+
+CREATE TABLE project_worker(
+PROJECT_ID int NOT NULL,
+WORKER_ID int NOT NULL,
+PRIMARY KEY(PROJECT_ID, WORKER_ID)
+);
+
+ALTER TABLE project_worker ADD CONSTRAINT project_worker_pr_id_fk FOREIGN KEY (PROJECT_ID) REFERENCES project(ID);
+ALTER TABLE project_worker ADD CONSTRAINT project_worker_w_id_fk FOREIGN KEY (WORKER_ID) REFERENCES worker(ID);
+
+CREATE SEQUENCE worker_seq START 1;
+CREATE SEQUENCE client_seq START 1;
+CREATE SEQUENCE project_seq START 1;
+
+ALTER TABLE worker ALTER COLUMN id SET DEFAULT nextval ('worker_seq');
+ALTER TABLE client ALTER COLUMN id SET DEFAULT nextval('client_seq');
+ALTER TABLE project ALTER COLUMN id SET DEFAULT nextval('project_seq');
